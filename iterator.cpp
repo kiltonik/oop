@@ -4,12 +4,12 @@ Iterator::Iterator(List::Node* ptr){
     this->nodeptr = ptr;
 }
 
-const Iterator Iterator::operator++(int i){
+const Iterator Iterator::operator++(){
     nodeptr = nodeptr->next;
     return *this;
 }
 
-const Iterator Iterator::operator--(int i){
+const Iterator Iterator::operator--(){
     nodeptr = nodeptr->prev;
     return *this;
 }

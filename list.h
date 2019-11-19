@@ -14,7 +14,6 @@ class Iterator;
 class List
 {
     struct Node{
-        Node(): next(nullptr), prev(nullptr), info() {}
         ParentClass* info;
         Node *next= nullptr, *prev= nullptr;
     };
@@ -30,7 +29,7 @@ public:
     void deleteElement(ParentClass* info);
     void readListFromFile(const QString& fileName);
     void writeToFile(const QString& fileName);
-    void deleteList();
+    void clearList();
     void add(ParentClass* info);
     int len();
     bool operator==(List list);

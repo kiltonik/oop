@@ -24,6 +24,26 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::fillListWidget(){
+    Iterator itr = Iterator(list.head);
+    for (;itr != list.end(); ++itr) {
+        if((*itr)->how()){
+            Thing *temp = dynamic_cast<Thing*>(*itr);
+            QJsonObject thingJson = temp->getInfo();
+            ui->listWidget->addItem(QString("Name: ") + thingJson.value("name").toString() + QString("\n")
+                                    + QString("Price: ") + QVariant(thingJson.value("price").toDouble()).toString() + QString("\n")
+                                    + QString("Volume: ") + QVariant(thingJson.value("volume").toDouble()).toString());
+        }
+        else {
+            CoinPile *temp = dynamic_cast<CoinPile*>(*itr);
+            QJsonObject thingJson = temp->getInfo();
+            ui->listWidget->addItem(QString("Name: Coin Pile\n")
+                                    + QString("Price: ") + QVariant(thingJson.value("price").toDouble()).toString() + QString("\n")
+                                    + QString("Volume: ") + QVariant(temp->getVolume()).toString());
+        }
+
+    }
+}
 
 void MainWindow::on_addThingButton_clicked()
 {
@@ -51,26 +71,7 @@ void MainWindow::on_addThingButton_clicked()
     Thing *newThing = new Thing(name, price, value);
     this->list.add(newThing);
     ui->listWidget->clear();
-    Iterator itr = Iterator(list.head);
-    for (;itr != list.end();itr++) {
-        if((*itr)->how()){
-            Thing *temp = dynamic_cast<Thing*>(*itr);
-            QJsonObject thingJson = temp->getInfo();
-            ui->listWidget->addItem(QString("Name: ") + thingJson.value("name").toString() + QString("\n")
-                                    + QString("Price: ") + QVariant(thingJson.value("price").toDouble()).toString() + QString("\n")
-                                    + QString("Volume: ") + QVariant(thingJson.value("volume").toDouble()).toString());
-        }
-        else {
-            CoinPile *temp = dynamic_cast<CoinPile*>(*itr);
-            QJsonObject thingJson = temp->getInfo();
-            ui->listWidget->addItem(QString("Name: Coin Pile\n")
-                                    + QString("Price: ") + QVariant(thingJson.value("price").toDouble()).toString() + QString("\n")
-                                    + QString("Volume: ") + QVariant(temp->calculateVolume()).toString());
-        }
-
-    }
-
-
+    this->fillListWidget();
 }
 
 
@@ -90,24 +91,8 @@ void MainWindow::on_addCoinPileButton_clicked()
     CoinPile *newCoinPile = new CoinPile(price);
     this->list.add(newCoinPile);
     ui->listWidget->clear();
-    Iterator itr = Iterator(list.head);
-    for (;itr != list.end();itr++) {
-        if((*itr)->how()){
-            Thing *temp = dynamic_cast<Thing*>(*itr);
-            QJsonObject thingJson = temp->getInfo();
-            ui->listWidget->addItem(QString("Name: ") + thingJson.value("name").toString() + QString("\n")
-                                    + QString("Price: ") + QVariant(thingJson.value("price").toDouble()).toString() + QString("\n")
-                                    + QString("Volume: ") + QVariant(thingJson.value("volume").toDouble()).toString());
-        }
-        else {
-            CoinPile *temp = dynamic_cast<CoinPile*>(*itr);
-            QJsonObject thingJson = temp->getInfo();
-            ui->listWidget->addItem(QString("Name: Coin Pile\n")
-                                    + QString("Price: ") + QVariant(thingJson.value("price").toDouble()).toString() + QString("\n")
-                                    + QString("Volume: ") + QVariant(temp->calculateVolume()).toString());
-        }
+    this->fillListWidget();
 
-    }
 }
 
 void MainWindow::on_loadFileButton_clicked()
@@ -120,14 +105,7 @@ void MainWindow::on_loadFileButton_clicked()
         return;
     }
     this->list.readListFromFile(fileName);
-    Iterator itr = Iterator(list.head);
-    for (;itr != list.end();itr++) {
-        QJsonObject thingJson = (*itr)->getInfo();
-        ui->listWidget->addItem(QString("Name: ") + thingJson.value("name").toString() + QString("\n")
-                                + QString("Price: ") + QVariant(thingJson.value("price").toDouble()).toString() + QString("\n")
-                                + QString("Volume: ") + QVariant(thingJson.value("volume").toDouble()).toString());
-
-    }
+    this->fillListWidget();
 }
 void MainWindow::on_saveToFIleButton_clicked()
 {
@@ -153,5 +131,5 @@ void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
 void MainWindow::on_clearListButton_clicked()
 {
     ui->listWidget->clear();
-    this->list.deleteList();
+    this->list.clearList();
 }

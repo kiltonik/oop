@@ -31,7 +31,7 @@ List::List(const List &list){
     Iterator itr = Iterator(list.head);
     this->head = nullptr;
     this->tail = nullptr;
-    for(; itr != List::end(); itr++){
+    for(; itr != List::end(); ++itr){
         this->add(*itr);
     }
 }
@@ -74,7 +74,7 @@ void List::deleteElement(ParentClass *info){
 }
 
 void List::readListFromFile(const QString& fileName){
-    this->deleteList();
+    this->clearList();
     QFile file(fileName+".json");
     if (!file.open(QIODevice::ReadOnly)) return;
     QJsonObject temp = QJsonDocument::fromJson(file.readAll()).object();
@@ -94,11 +94,11 @@ void List::readListFromFile(const QString& fileName){
 
 void List::writeToFile(const QString& fileName){
     QFile file(fileName+".json");
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Append)) return;
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) return;
     QJsonDocument data;
     int i = 0;
     QJsonObject t;
-    for(Iterator itr = Iterator(this->head); itr != this->end(); itr++){
+    for(Iterator itr = Iterator(this->head); itr != this->end(); ++itr){
         if((*itr)->how()){
             Thing *temp = dynamic_cast<Thing*>(*itr);
             t.insert(QString::number(i), temp->getInfo());
@@ -113,22 +113,15 @@ void List::writeToFile(const QString& fileName){
     file.close();
 }
 
-void List::deleteList(){
+void List::clearList(){
     Node *cur = head;
-    for (Iterator *itr = new Iterator(head); itr != nullptr; ++itr){
-        delete itr;
+    while(cur){
+        Node *next = cur->next;
+        delete cur;
+        cur = next;
     }
-//    while(cur){
-//        if (head == tail){
-
-//            delete cur;
-//        }
-//        else{
-//            delete cur->prev;
-//            cur = cur->next;
-
-//        }
-//    }
+    head = nullptr;
+    tail = nullptr;
 }
 
 void List::add(ParentClass* info){
@@ -197,13 +190,14 @@ int List::len(){
 
 bool List::operator==(List list){
     bool flag = true;
-    for(Iterator itr = this->begin(), itr2 = list.begin();itr != List::end() && itr2 != List::end();itr++, itr2++){
+    for(Iterator itr = this->begin(), itr2 = list.begin();itr != List::end() && itr2 != List::end(); ++itr, ++itr2){
         if(!(*itr == *itr2)) flag = false;
     }
     return flag;
 }
 
 List::~List(){
-    std::cout << "List destructed" << std::endl;
-    this->deleteList();
+    this->clearList();
+    delete head;
+    delete tail;
 }

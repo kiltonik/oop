@@ -23,4 +23,8 @@ QJsonObject ParentClass::getInfo(){
                        });
 }
 
+double ParentClass::getUnitCost(){
+    return price_/this->getVolume();
+}
+
 ParentClass::~ParentClass(){}

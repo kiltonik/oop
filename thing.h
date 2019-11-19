@@ -16,8 +16,7 @@ public:
     Thing(QString name, double price, double volume);
     Thing(const Thing &thing);
     void setVolume(double volume);
-    double getVolume();
-    double getUnitCost() override;
+    double getVolume() override;
     void setName(QString name);
     QString getName();
     bool operator==(Thing *thing);

@@ -32,10 +32,6 @@ void Thing::setVolume(double volume){
     this->volume_ = volume;
 }
 
-double Thing::getUnitCost(){
-    return double(this->price_)/double(this->volume_);
-}
-
 double Thing::getVolume(){
     return this->volume_;
 }

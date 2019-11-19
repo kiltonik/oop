@@ -18,6 +18,9 @@ public:
     ~MainWindow();
 
 private slots:
+
+    void fillListWidget();
+
     void on_addThingButton_clicked();
 
     void on_addCoinPileButton_clicked();

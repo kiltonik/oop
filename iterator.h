@@ -10,8 +10,8 @@ public:
     friend class List;
 
     Iterator(List::Node* ptr);
-    const Iterator operator++(int i);
-    const Iterator operator--(int i);
+    const Iterator operator++();
+    const Iterator operator--();
     ParentClass* &operator *();
     bool operator==(const Iterator& ptr);
     bool operator!=(const Iterator& ptr);

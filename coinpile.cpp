@@ -11,7 +11,7 @@ CoinPile::CoinPile(double price):ParentClass(price){}
 
 CoinPile::CoinPile(const CoinPile &coinPile):ParentClass(coinPile.price_){}
 
-int CoinPile::calculateVolume(){
+double CoinPile::getVolume(){
     int hundreds = int(this->price_)/100;
     int fifties = int(this->price_ - hundreds * 100)/ 50;
     int tens = int(this->price_ - hundreds * 100 - fifties * 50) / 10;
@@ -22,10 +22,6 @@ int CoinPile::calculateVolume(){
 
 bool CoinPile::how(){
     return false;
-}
-
-double CoinPile::getUnitCost(){
-    return double(price_) / double(this->calculateVolume());
 }
 
 CoinPile::~CoinPile(){}
