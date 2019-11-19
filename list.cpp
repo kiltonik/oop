@@ -114,11 +114,21 @@ void List::writeToFile(const QString& fileName){
 }
 
 void List::deleteList(){
-    Node *cur = this->head;
-    while(cur){
-        delete cur->prev;
-        cur = cur->next;
+    Node *cur = head;
+    for (Iterator *itr = new Iterator(head); itr != nullptr; ++itr){
+        delete itr;
     }
+//    while(cur){
+//        if (head == tail){
+
+//            delete cur;
+//        }
+//        else{
+//            delete cur->prev;
+//            cur = cur->next;
+
+//        }
+//    }
 }
 
 void List::add(ParentClass* info){
@@ -164,10 +174,10 @@ void List::add(ParentClass* info){
                     head = temp;
                 }
                 else{
-                    temp->prev = cur->prev;
-                    temp->next = cur;
-                    cur->prev->next = temp;
-                    cur->prev = temp;
+                    temp->prev = cur;
+                    temp->next = cur->next;
+                    cur->next = temp;
+                    temp->next->prev = temp;
                 }
             }
         }

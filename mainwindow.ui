@@ -161,7 +161,7 @@
         </widget>
        </item>
        <item row="6" column="0" colspan="2">
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="clearListButton">
          <property name="text">
           <string>Clear list</string>
          </property>
@@ -208,7 +208,7 @@
      <x>0</x>
      <y>0</y>
      <width>440</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

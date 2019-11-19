@@ -150,7 +150,7 @@ void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
     delete item;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_clearListButton_clicked()
 {
     ui->listWidget->clear();
     this->list.deleteList();
