@@ -30,6 +30,7 @@ HEADERS += \
     list.h \
     mainwindow.h \
     parentclass.h \
+    test.h \
     thing.h
 
 FORMS += \

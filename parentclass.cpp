@@ -9,6 +9,7 @@ ParentClass::ParentClass(double price){
 }
 
 void ParentClass::setPrice(double price){
+    if (price <= 0) return;
     price_ = price;
 }
 

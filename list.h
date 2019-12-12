@@ -18,21 +18,20 @@ class List
         Node *next= nullptr, *prev= nullptr;
     };
 private:
-    QJsonObject merge(QJsonObject* obj1, QJsonObject* obj2);
+    Node *head, *tail;
 public:
     friend class Iterator;
-    Node *head, *tail;
-    Iterator begin();
-    Iterator end();
+    Iterator begin() const;
+    Iterator end() const;
     List();
     List(const List &list);
-    void deleteElement(ParentClass* info);
+    void deleteElement(ParentClass& info);
     void readListFromFile(const QString& fileName);
-    void writeToFile(const QString& fileName);
+    void writeToFile(const QString& fileName) const;
     void clearList();
-    void add(ParentClass* info);
-    int len();
-    bool operator==(List list);
+    void add(ParentClass& info);
+    int len() const;
+    bool operator==(List &list) const;
     ~List();
 };
 

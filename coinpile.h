@@ -10,7 +10,7 @@ public:
     CoinPile();
     CoinPile(double price);
     CoinPile(const CoinPile &coinPile);
-    double getVolume() override;
+    virtual double getVolume() const override;
     bool how() override;
     ~CoinPile() override;
 };

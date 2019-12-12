@@ -15,7 +15,7 @@ public:
     void setPrice(double price);
     double getPrice();
     virtual bool how() = 0;
-    virtual double getVolume() = 0;
+    virtual double getVolume() const = 0;
     double getUnitCost();
     QJsonObject getInfo();
     virtual ~ParentClass();

@@ -12,14 +12,12 @@
 #include "iterator.h"
 
 
-Iterator List::begin(){
-    Iterator *begin = new Iterator(this->head);
-    return *begin;
+Iterator List::begin() const{
+    return Iterator(this->head);
 }
 
-Iterator List::end(){
-    Iterator end(nullptr);
-    return end;
+Iterator List::end() const{
+    return Iterator(nullptr);
 }
 List::List()
 {
@@ -32,14 +30,14 @@ List::List(const List &list){
     this->head = nullptr;
     this->tail = nullptr;
     for(; itr != List::end(); ++itr){
-        this->add(*itr);
+        this->add(*(*itr));
     }
 }
 
-void List::deleteElement(ParentClass *info){
+void List::deleteElement(ParentClass &info){
     Node *cur = this->head;
     while(cur){
-        if(cur->info->getInfo() == info->getInfo()){
+        if(cur->info->getInfo() == info.getInfo()){
             if(cur == this->head){
                 if (this->head == this->tail){
                     delete cur;
@@ -75,24 +73,26 @@ void List::deleteElement(ParentClass *info){
 
 void List::readListFromFile(const QString& fileName){
     this->clearList();
-    QFile file(fileName+".json");
+    QFile file(fileName + ".json");
     if (!file.open(QIODevice::ReadOnly)) return;
     QJsonObject temp = QJsonDocument::fromJson(file.readAll()).object();
     for(const auto& i: temp.keys()){
         QJsonObject object = temp.value(i).toObject();
         if(object.value("class").toBool()){
-            Thing *thing = new Thing(object.value("name").toString(), object.value("price").toDouble(), object.value("volume").toDouble());
-            this->add(thing);
+            Thing *thing = new Thing(object.value("name").toString(),
+                                     object.value("price").toDouble(),
+                                     object.value("volume").toDouble());
+            this->add(*thing);
         }
         else{
             CoinPile *coinPile = new CoinPile(object.value("price").toDouble());
-            this->add(coinPile);
+            this->add(*coinPile);
         }
     }
     file.close();
 }
 
-void List::writeToFile(const QString& fileName){
+void List::writeToFile(const QString& fileName) const{
     QFile file(fileName+".json");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) return;
     QJsonDocument data;
@@ -124,9 +124,9 @@ void List::clearList(){
     tail = nullptr;
 }
 
-void List::add(ParentClass* info){
-    Thing *tmp = dynamic_cast<Thing*>(info);
-    if (info->getPrice() <= 0){
+void List::add(ParentClass &info){
+    Thing *tmp = dynamic_cast<Thing*>(&info);
+    if (info.getPrice() <= 0){
         return;
     }
     if (tmp){
@@ -134,7 +134,7 @@ void List::add(ParentClass* info){
     }
 
     Node *temp = new Node;
-    temp->info = info;
+    temp->info = &info;
     if(!head){
         temp->prev = nullptr;
         head = tail = temp;
@@ -142,8 +142,9 @@ void List::add(ParentClass* info){
     else{
         Node *cur;
         cur = head;
-        while (cur != tail && cur->info->getUnitCost() >= info->getUnitCost()) cur = cur->next;
-        if(cur->info->getUnitCost() < info->getUnitCost()) cur = cur->prev;
+        while (cur != tail && cur->info->getUnitCost() >= info.getUnitCost())
+            cur = cur->next;
+        if(cur->info->getUnitCost() < info.getUnitCost()) cur = cur->prev;
         if (cur == tail){
             Node *node;
             node = tail;
@@ -156,6 +157,7 @@ void List::add(ParentClass* info){
             if(cur == head){
                 temp->prev = cur;
                 temp->next = cur->next;
+                cur->next->prev = temp;
                 cur->next = temp;
             }
             else{
@@ -177,7 +179,7 @@ void List::add(ParentClass* info){
     }
 }
 
-int List::len(){
+int List::len() const{
     int len = 0;
     Node *temp;
     temp = head;
@@ -188,10 +190,11 @@ int List::len(){
     return len;
 }
 
-bool List::operator==(List list){
+bool List::operator==(List &list) const{
     bool flag = true;
-    for(Iterator itr = this->begin(), itr2 = list.begin();itr != List::end() && itr2 != List::end(); ++itr, ++itr2){
-        if(!(*itr == *itr2)) flag = false;
+    for(Iterator itr = this->begin(), itr2 = list.begin();
+        itr != List::end() && itr2 != List::end(); ++itr, ++itr2){
+        if(!((*itr)->getInfo() == (*itr2)->getInfo())) flag = false;
     }
     return flag;
 }

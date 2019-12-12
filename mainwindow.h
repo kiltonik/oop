@@ -33,6 +33,18 @@ private slots:
 
     void on_clearListButton_clicked();
 
+    void on_thingNameEdit_textChanged(const QString &arg1);
+
+    void on_pilePriceEdit_textChanged(const QString &arg1);
+
+    void on_filePathEdit_textChanged(const QString &arg1);
+
+    void on_fileNameEdit_textChanged(const QString &arg1);
+
+    void on_thingPriceEdit_textChanged(const QString &arg1);
+
+    void on_thingVolumeEdit_textChanged(const QString &arg1);
+
 private:
     List list;
     Ui::MainWindow *ui;

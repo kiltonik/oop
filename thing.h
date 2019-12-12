@@ -16,10 +16,10 @@ public:
     Thing(QString name, double price, double volume);
     Thing(const Thing &thing);
     void setVolume(double volume);
-    double getVolume() override;
+    double getVolume() const override;
     void setName(QString name);
-    QString getName();
-    bool operator==(Thing *thing);
+    QString &getName();
+    bool operator==(Thing &thing);
     QJsonObject getInfo();
     bool how() override;
     ~Thing() override;

@@ -7,11 +7,18 @@
 
 
 
-Thing::Thing() = default;
+Thing::Thing(){
+    name_ = QString("table");
+    price_ = 1;
+    volume_ = 1;
+}
+
 Thing::Thing(QString name, double price, double volume){
     name_ = name;
-    price_ = price;
-    volume_ = volume;
+    if (price <= 1) price_ = 1;
+    else price_ = price;
+    if (volume <= 1) volume_ = 1;
+    else volume_ = volume;
 }
 
 Thing::Thing(const Thing &thing):ParentClass(){
@@ -21,32 +28,33 @@ Thing::Thing(const Thing &thing):ParentClass(){
 }
 
 void Thing::setName(QString name){
-    name_= name;
+    if (name.isEmpty()) name_ = QString("table");
+    else name_= name;
 }
 
-QString Thing::getName(){
+QString &Thing::getName(){
     return name_;
 }
 
+// проверка на вводимые данные, инициализация в конструкторе
 void Thing::setVolume(double volume){
-    this->volume_ = volume;
+    if(volume <= 0) return;
+    else this->volume_ = volume;
 }
 
-double Thing::getVolume(){
+double Thing::getVolume() const {
     return this->volume_;
 }
 
-bool Thing::operator==(Thing *thing){
-    return this->getInfo() == thing->getInfo();
-//    return (this->name_ == thing->getName() && (this->price_ == thing->getPrice())  &&
-//            (this->volume_ - thing->getVolume()) );
+bool Thing::operator==(Thing &thing){
+    return this->getInfo() == thing.getInfo();
 }
 
 QJsonObject Thing::getInfo(){
     return QJsonObject({
-                           qMakePair(QString("class"), this->how()),
+                           qMakePair(QString("class"), how()),
                            qMakePair(QString("name"), name_),
-                           qMakePair(QString("price"), QJsonValue(price_)),
+                           qMakePair(QString("price"), QJsonValue(this->getPrice())),
                            qMakePair(QString("volume"), QJsonValue(volume_))
                        });
 }
