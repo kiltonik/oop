@@ -36,7 +36,6 @@ QString &Thing::getName(){
     return name_;
 }
 
-// проверка на вводимые данные, инициализация в конструкторе
 void Thing::setVolume(double volume){
     if(volume <= 0) return;
     else this->volume_ = volume;

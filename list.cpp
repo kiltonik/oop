@@ -29,7 +29,7 @@ List::List(const List &list){
     Iterator itr = Iterator(list.head);
     this->head = nullptr;
     this->tail = nullptr;
-    for(; itr != List::end(); ++itr){
+    for(; itr != list.end(); ++itr){
         this->add(*(*itr));
     }
 }
@@ -40,6 +40,7 @@ void List::deleteElement(ParentClass &info){
         if(cur->info->getInfo() == info.getInfo()){
             if(cur == this->head){
                 if (this->head == this->tail){
+                    delete cur->info;
                     delete cur;
                     this->head = nullptr;
                     this->tail = nullptr;
@@ -48,6 +49,7 @@ void List::deleteElement(ParentClass &info){
                 else{
                     cur->next->prev = nullptr;
                     head = cur->next;
+                    delete cur->info;
                     delete cur;
                     return;
                 }
@@ -56,12 +58,14 @@ void List::deleteElement(ParentClass &info){
                 if (cur == this->tail){
                     tail = cur->prev;
                     tail->next = nullptr;
+                    delete cur->info;
                     delete cur;
                     return;
                 }
                 else{
                     cur->prev->next = cur->next;
                     cur->next->prev = cur->prev;
+                    delete cur->info;
                     delete cur;
                     return;
                 }
@@ -93,7 +97,7 @@ void List::readListFromFile(const QString& fileName){
 }
 
 void List::writeToFile(const QString& fileName) const{
-    QFile file(fileName+".json");
+    QFile file(fileName + ".json");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) return;
     QJsonDocument data;
     int i = 0;
@@ -125,19 +129,23 @@ void List::clearList(){
 }
 
 void List::add(ParentClass &info){
-    Thing *tmp = dynamic_cast<Thing*>(&info);
+    ParentClass *temp;
+    if(info.how()){
+        temp = new Thing(*dynamic_cast<Thing*>(&info));
+        if (temp->getPrice() <= 0) return;
+    }
+    else{
+        temp = new CoinPile(*dynamic_cast<CoinPile*>(&info));
+        if(temp->getPrice() <= 0) return;
+    }
     if (info.getPrice() <= 0){
         return;
     }
-    if (tmp){
-        if(tmp->getVolume() <= 0) return;
-    }
-
-    Node *temp = new Node;
-    temp->info = &info;
+    Node *tmp = new Node;
+    tmp->info = &info;
     if(!head){
-        temp->prev = nullptr;
-        head = tail = temp;
+        tmp->prev = nullptr;
+        head = tail = tmp;
     }
     else{
         Node *cur;
@@ -148,31 +156,31 @@ void List::add(ParentClass &info){
         if (cur == tail){
             Node *node;
             node = tail;
-            tail = temp;
+            tail = tmp;
             node->next = tail;
             tail->prev = node;
         }
 
         else{
             if(cur == head){
-                temp->prev = cur;
-                temp->next = cur->next;
-                cur->next->prev = temp;
-                cur->next = temp;
+                tmp->prev = cur;
+                tmp->next = cur->next;
+                cur->next->prev = tmp;
+                cur->next = tmp;
             }
             else{
                 if (cur == nullptr){
                     Node *node;
                     node = head;
-                    temp->next = head;
-                    node->prev = temp;
-                    head = temp;
+                    tmp->next = head;
+                    node->prev = tmp;
+                    head = tmp;
                 }
                 else{
-                    temp->prev = cur;
-                    temp->next = cur->next;
-                    cur->next = temp;
-                    temp->next->prev = temp;
+                    tmp->prev = cur;
+                    tmp->next = cur->next;
+                    cur->next = tmp;
+                    tmp->next->prev = tmp;
                 }
             }
         }
@@ -193,7 +201,7 @@ int List::len() const{
 bool List::operator==(List &list) const{
     bool flag = true;
     for(Iterator itr = this->begin(), itr2 = list.begin();
-        itr != List::end() && itr2 != List::end(); ++itr, ++itr2){
+        itr != list.end() && itr2 != list.end(); ++itr, ++itr2){
         if(!((*itr)->getInfo() == (*itr2)->getInfo())) flag = false;
     }
     return flag;
