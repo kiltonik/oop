@@ -129,20 +129,23 @@ void List::clearList(){
 }
 
 void List::add(ParentClass &info){
+    Node *tmp = new Node;
     ParentClass *temp;
     if(info.how()){
         temp = new Thing(*dynamic_cast<Thing*>(&info));
+        tmp->info = new Thing(*dynamic_cast<Thing*>(&info));
         if (temp->getPrice() <= 0) return;
     }
     else{
         temp = new CoinPile(*dynamic_cast<CoinPile*>(&info));
+        tmp->info = new CoinPile(*dynamic_cast<CoinPile*>(&info));
         if(temp->getPrice() <= 0) return;
     }
     if (info.getPrice() <= 0){
         return;
     }
-    Node *tmp = new Node;
-    tmp->info = &info;
+//    tmp->info = &info;
+    *(tmp->info) = *temp;
     if(!head){
         tmp->prev = nullptr;
         head = tail = tmp;
