@@ -144,8 +144,8 @@ void List::add(ParentClass &info){
     if (info.getPrice() <= 0){
         return;
     }
-//    tmp->info = &info;
     *(tmp->info) = *temp;
+    delete temp;
     if(!head){
         tmp->prev = nullptr;
         head = tail = tmp;
